@@ -12,6 +12,10 @@
 
 /************************** Function Definitions ***************************/
 
+/*
+* Funcion para mandar un dato imprimible a la LCD
+* @param data codigo ASCII del caracter
+*/
 void lcd_write_data(char data)
 {
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, DATA | RW_ENABLE_MASK | data);
@@ -19,6 +23,11 @@ void lcd_write_data(char data)
     return;
 }
 
+
+/*
+* Funcion para enviar un comando especifico a la LCD
+* @param cmd comando a enviar
+*/
 void lcd_write_cmd(char cmd)
 {
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | cmd);
@@ -26,6 +35,9 @@ void lcd_write_cmd(char cmd)
     return;
 }
 
+/*
+* Esta funcion envia el comando para retornar el cursor a la posicion inicial en el display
+*/
 void lcd_CursorHome_cmd(void)
 {
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x02);
@@ -33,6 +45,9 @@ void lcd_CursorHome_cmd(void)
     return;
 }
 
+/*
+* Esta funcion envia el comando limpiar el display
+*/
 void lcd_ClearDisplay_cmd(void)
 {
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x01);
@@ -40,6 +55,10 @@ void lcd_ClearDisplay_cmd(void)
     return;
 }
 
+/*
+* Establece el cursor en la direccion especificada
+* @param address direccion especifica para colocar el cursor
+*/
 void lcd_SetAddress(char address)
 {
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x80 | address);
@@ -47,6 +66,10 @@ void lcd_SetAddress(char address)
     return;
 }
 
+/*
+* Imprime una cadena de hasta 16 caracteres
+* @param string puntero a la cadena de caracteres
+*/
 void lcd_print_string(char* string)
 {
     char i = 0;
@@ -59,17 +82,31 @@ void lcd_print_string(char* string)
     }
     return;
 }
+
 /*
+* Imprime un numero entero de hasta 4 cifras
+* @param number numero a imprimir
+*/
 void lcd_print_int(int number)
 {
     int remainder, i = 0;
     int display[4];
-    while (number != 0)
+    if(number > 10000)
+    {
+        number %= 10000;    // Si el numero tiene mas de 4 cifras, se toman las 4 cifras menos significativas
+    }
+    while (number != 0)     // Separar cada cifra del numero y colocarlas en el arreglo display
     {
         display[i] = number % 10;
         number = number / 10;
         i++;
     }
+    while (i >= 0)
+    {
+        lcd_write_data(display[i] + 0x30);      // Mandar a la LCD el codigo ASCII del digito
+        i--;
+    }
+    return;
     
 }
-*/
+
