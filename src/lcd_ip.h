@@ -1,8 +1,8 @@
 /*****************************************************************************
-* Filename:          Y:\Custom_IP\MyProcessorIPLib/drivers/lcd_ip_v1_00_a/src/lcd_ip.h
-* Version:           1.00.a
+* Filename:          Y:\Custom_IP\MyProcessorIPLib/drivers/lcd_ip_v2_00_a/src/lcd_ip.h
+* Version:           2.00.a
 * Description:       lcd_ip Driver Header File
-* Date:              Mon Dec 19 17:47:23 2022 (by Create and Import Peripheral Wizard)
+* Date:              Fri Dec 23 19:55:53 2022 (by Create and Import Peripheral Wizard)
 *****************************************************************************/
 
 #ifndef LCD_IP_H
@@ -23,9 +23,11 @@
 /**
  * User Logic Slave Space Offsets
  * -- SLV_REG0 : user logic slave module register 0
+ * -- SLV_REG1 : user logic slave module register 1
  */
 #define LCD_IP_USER_SLV_SPACE_OFFSET (0x00000000)
 #define LCD_IP_SLV_REG0_OFFSET (LCD_IP_USER_SLV_SPACE_OFFSET + 0x00000000)
+#define LCD_IP_SLV_REG1_OFFSET (LCD_IP_USER_SLV_SPACE_OFFSET + 0x00000004)
 
 /**************************** Type Definitions *****************************/
 
@@ -91,9 +93,13 @@
  */
 #define LCD_IP_mWriteSlaveReg0(BaseAddress, RegOffset, Value) \
  	Xil_Out32((BaseAddress) + (LCD_IP_SLV_REG0_OFFSET) + (RegOffset), (Xuint32)(Value))
+#define LCD_IP_mWriteSlaveReg1(BaseAddress, RegOffset, Value) \
+ 	Xil_Out32((BaseAddress) + (LCD_IP_SLV_REG1_OFFSET) + (RegOffset), (Xuint32)(Value))
 
 #define LCD_IP_mReadSlaveReg0(BaseAddress, RegOffset) \
  	Xil_In32((BaseAddress) + (LCD_IP_SLV_REG0_OFFSET) + (RegOffset))
+#define LCD_IP_mReadSlaveReg1(BaseAddress, RegOffset) \
+ 	Xil_In32((BaseAddress) + (LCD_IP_SLV_REG1_OFFSET) + (RegOffset))
 
 /************************** Function Prototypes ****************************/
 void lcd_write_data(char data);
