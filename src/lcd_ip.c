@@ -12,10 +12,6 @@
 
 /************************** Function Definitions ***************************/
 
-/*
-* Funcion para mandar un dato imprimible a la LCD
-* @param data codigo ASCII del caracter
-*/
 void lcd_write_data(char data)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
@@ -24,11 +20,6 @@ void lcd_write_data(char data)
     return;
 }
 
-
-/*
-* Funcion para enviar un comando especifico a la LCD
-* @param cmd comando a enviar
-*/
 void lcd_write_cmd(char cmd)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
@@ -37,9 +28,6 @@ void lcd_write_cmd(char cmd)
     return;
 }
 
-/*
-* Esta funcion envia el comando para retornar el cursor a la posicion inicial en el display
-*/
 void lcd_CursorHome_cmd(void)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
@@ -48,9 +36,6 @@ void lcd_CursorHome_cmd(void)
     return;
 }
 
-/*
-* Esta funcion envia el comando limpiar el display
-*/
 void lcd_ClearDisplay_cmd(void)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
@@ -59,10 +44,6 @@ void lcd_ClearDisplay_cmd(void)
     return;
 }
 
-/*
-* Establece el cursor en la direccion especificada
-* @param address direccion especifica para colocar el cursor
-*/
 void lcd_SetAddress(char address)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
@@ -71,10 +52,6 @@ void lcd_SetAddress(char address)
     return;
 }
 
-/*
-* Imprime una cadena de hasta 16 caracteres
-* @param string puntero a la cadena de caracteres
-*/
 void lcd_print_string(char* string)
 {
     char i = 0;
@@ -88,13 +65,9 @@ void lcd_print_string(char* string)
     return;
 }
 
-/*
-* Imprime un numero entero de hasta 4 cifras
-* @param number numero a imprimir
-*/
 void lcd_print_int(int number)
 {
-    int remainder, i = 0;
+    int i = 0;
     int display[4];
     if(number > 10000)
     {
@@ -102,29 +75,23 @@ void lcd_print_int(int number)
     }
     while (number != 0)     // Separar cada cifra del numero y colocarlas en el arreglo display
     {
-        display[i] = number % 10;
+        display[i] = (number % 10) + 0x30;
         number = number / 10;
         i++;
     }
+    i--;
     while (i >= 0)
     {
-        lcd_write_data(display[i] + 0x30);      // Mandar a la LCD el codigo ASCII del digito
+        lcd_write_data(display[i]);      // Mandar a la LCD el codigo ASCII del digito
         i--;
     }
     return;
-    
 }
 
-/*
-* Envia un caracter ASCII al recuadro especificado en la LCD. Los recuadros se organizan de izquierda a derecha
-* comenzando por el numero 0 en la primera linea hasta el 31 en la segunda.
-* @param data caracter ASCII a enviar
-* @param frame indice del recuadro (valor entre 0 - 32)
-*/
-void send_to_frame(char data, char frame)
+void lcd_send_to_frame(char data, char frame)
 {
     char address;
-    address = (frame > 16) ? (address + 0x40) : frame;
+    address = (frame >= 16) ? ((frame % 16) + 0x40) : frame;
     lcd_SetAddress(address);
     lcd_write_data(data);
     return;
