@@ -96,3 +96,13 @@ void lcd_send_to_frame(char data, char frame)
     lcd_write_data(data);
     return;
 }
+
+void init_delay()
+{
+    volatile int i;
+    do
+    {
+        for(i = 0; i < 100000; i++);
+    } while (LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);
+    return;
+}

@@ -104,41 +104,41 @@
 /************************** Function Prototypes ****************************/
 
 /*
-* Funcion para mandar un dato imprimible a la LCD
+* Funcion para mandar un dato imprimible a la LCD.
 * @param data codigo ASCII del caracter
 */
 void lcd_write_data(char data);
 
 /*
-* Funcion para enviar un comando especifico a la LCD
+* Funcion para enviar un comando especifico a la LCD.
 * @param cmd comando a enviar
 */
 void lcd_write_cmd(char cmd);
 
 /*
-* Esta funcion envia el comando para retornar el cursor a la posicion inicial en el display
+* Esta funcion envia el comando para retornar el cursor a la posicion inicial en el display.
 */
 void lcd_CursorHome_cmd(void);
 
 /*
-* Esta funcion envia el comando limpiar el display
+* Esta funcion envia el comando limpiar el display.
 */
 void lcd_ClearDisplay_cmd(void);
 
 /*
-* Establece el cursor en la direccion especificada
+* Establece el cursor en la direccion especificada.
 * @param address direccion especifica para colocar el cursor
 */
 void lcd_SetAddress(char address);
 
 /*
-* Imprime una cadena de hasta 16 caracteres
+* Imprime una cadena de hasta 16 caracteres.
 * @param string puntero a la cadena de caracteres
 */
 void lcd_print_string(char* string);
 
 /*
-* Imprime un numero entero de hasta 4 cifras
+* Imprime un numero entero de hasta 4 cifras.
 * @param number numero a imprimir
 */
 void lcd_print_int(int number);
@@ -146,10 +146,17 @@ void lcd_print_int(int number);
 /*
 * Envia un caracter ASCII al recuadro especificado en la LCD. Los recuadros se organizan de izquierda a derecha
 * comenzando por el numero 0 en la primera linea hasta el 31 en la segunda.
-* @param data caracter ASCII a enviar
+* @param data caracter ASCII a enviar.
 * @param frame indice del recuadro (valor entre 0 - 31)
 */
 void lcd_send_to_frame(char data, char frame);
+
+/*
+* Realiza una espera para permitir la inicializacion de la LCD cuando se inicia o se resetea el sistema. Esta
+* funcion siempre debe invocarse al inicio de cualquier programa, de lo contrario no se garantiza un correcto
+* funcionamiento.
+*/
+void init_delay();
 
 /**
  *
