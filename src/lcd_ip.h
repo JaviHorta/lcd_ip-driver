@@ -102,6 +102,8 @@ void lcd_CursorHome_cmd(void);
 void lcd_ClearDisplay_cmd(void);
 void lcd_SetAddress(char address);
 void lcd_print_string(char* string);
+void lcd_print_int(int number);
+void send_to_frame(char data, char frame);
 
 /**
  *
