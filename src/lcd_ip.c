@@ -110,3 +110,17 @@ void lcd_print_int(int number)
     
 }
 
+/*
+* Envia un caracter ASCII al recuadro especificado en la LCD. Los recuadros se organizan de izquierda a derecha
+* comenzando por el numero 0 en la primera linea hasta el 31 en la segunda.
+* @param data caracter ASCII a enviar
+* @param frame indice del recuadro (valor entre 0 - 32)
+*/
+void send_to_frame(char data, char frame)
+{
+    char address;
+    address = (frame > 16) ? (address + 0x40) : frame;
+    lcd_SetAddress(address);
+    lcd_write_data(data);
+    return;
+}
