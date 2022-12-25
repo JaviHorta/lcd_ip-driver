@@ -97,7 +97,7 @@ void lcd_send_to_frame(char data, char frame)
     return;
 }
 
-void init_delay()
+void lcd_init_delay()
 {
     volatile int i;
     do

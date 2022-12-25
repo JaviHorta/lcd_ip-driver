@@ -156,7 +156,7 @@ void lcd_send_to_frame(char data, char frame);
 * funcion siempre debe invocarse al inicio de cualquier programa, de lo contrario no se garantiza un correcto
 * funcionamiento.
 */
-void init_delay();
+void lcd_init_delay();
 
 /**
  *
