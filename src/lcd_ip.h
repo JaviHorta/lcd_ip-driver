@@ -19,6 +19,8 @@
 #define COMMAND 0x000
 #define DATA 0x100
 #define RW_ENABLE_MASK 0x200
+#define RIGTH 0x04
+#define LEFT 0x00
 
 /**
  * User Logic Slave Space Offsets
@@ -33,6 +35,7 @@
 
 
 /***************** Macros (Inline Functions) Definitions *******************/
+
 
 /**
  *
@@ -101,60 +104,93 @@
 #define LCD_IP_mReadSlaveReg1(BaseAddress, RegOffset) \
  	Xil_In32((BaseAddress) + (LCD_IP_SLV_REG1_OFFSET) + (RegOffset))
 
+/**
+ * 
+ * Macro para mandar un dato imprimible a la LCD.
+ * @param 	data codigo ASCII del caracter
+ * 
+ */
+#define lcd_write_data(data) \
+	while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, DATA | RW_ENABLE_MASK | data); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, DATA | data)
+
+/**
+ * 
+ * Macro para enviar un comando especifico a la LCD.
+ * @param 	cmd comando a enviar
+ * 
+ */
+#define lcd_write_cmd(cmd) \
+	while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | cmd); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | cmd)
+
+/**
+ * 
+ * Macro para enviar el comando de retorno del cursor de la LCD a la primera posicion (linea 1, casilla 1)
+ * 
+*/
+#define lcd_CursorHome_cmd() \
+	while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x02); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x02)
+
+/**
+ * 
+ * Macro para enviar el comando de borrar el display LCD
+ * 
+*/
+#define lcd_ClearDisplay_cmd() \
+	while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x01); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x01)
+
+/**
+ * 
+ * Comando para mover el cursor una posición a la izquierda o a la derecha según se indique.
+ * @param  	direction indica el sentido del movimiento del cursor (RIGTH o LEFT). 
+ * @note	Solo puede tomar los valores definidos como RIGTH o LEFT. Si se pasa cualquier otro valor, el resultado puede que no sea el esperado.
+ * 
+*/
+#define lcd_MoveCursor_cmd(direction) \
+	lcd_write_cmd(0x10 | direction) \
+
+/**
+ * Establece el cursor de la LCD en la direccion especificada.
+ * @param 	address direccion especifica para colocar el cursor
+*/
+#define lcd_SetAddress(address) \
+	while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x80 | address); \
+    LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x80 | address) \
+
 /************************** Function Prototypes ****************************/
 
-/*
-* Funcion para mandar un dato imprimible a la LCD.
-* @param data codigo ASCII del caracter
-*/
-void lcd_write_data(char data);
-
-/*
-* Funcion para enviar un comando especifico a la LCD.
-* @param cmd comando a enviar
-*/
-void lcd_write_cmd(char cmd);
-
-/*
-* Esta funcion envia el comando para retornar el cursor a la posicion inicial en el display.
-*/
-void lcd_CursorHome_cmd(void);
-
-/*
-* Esta funcion envia el comando limpiar el display.
-*/
-void lcd_ClearDisplay_cmd(void);
-
-/*
-* Establece el cursor en la direccion especificada.
-* @param address direccion especifica para colocar el cursor
-*/
-void lcd_SetAddress(char address);
-
-/*
-* Imprime una cadena de hasta 16 caracteres.
-* @param string puntero a la cadena de caracteres
+/**
+ * Imprime una cadena de hasta 16 caracteres.
+ * @param string puntero a la cadena de caracteres
 */
 void lcd_print_string(char* string);
 
-/*
-* Imprime un numero entero de hasta 4 cifras.
-* @param number numero a imprimir
+/**
+ * Imprime un numero entero de hasta 4 cifras.
+ * @param number numero a imprimir
 */
 void lcd_print_int(int number);
 
-/*
-* Envia un caracter ASCII al recuadro especificado en la LCD. Los recuadros se organizan de izquierda a derecha
-* comenzando por el numero 0 en la primera linea hasta el 31 en la segunda.
-* @param data caracter ASCII a enviar.
-* @param frame indice del recuadro (valor entre 0 - 31)
+/**
+ * Envia un caracter ASCII a la casilla especificada en la LCD. Las casillas se organizan de izquierda a derecha
+ * comenzando por el numero 0 en la primera linea hasta el 31 en la segunda.
+ * @param data caracter ASCII a enviar.
+ * @param frame indice de la casilla (valor entre 0 - 31)
 */
 void lcd_send_to_frame(char data, char frame);
 
-/*
-* Realiza una espera para permitir la inicializacion de la LCD cuando se inicia o se resetea el sistema. Esta
-* funcion siempre debe invocarse al inicio de cualquier programa, de lo contrario no se garantiza un correcto
-* funcionamiento.
+/**
+ * Realiza una espera para permitir la inicializacion de la LCD cuando se inicia o se resetea el sistema. Esta
+ * funcion siempre debe invocarse al inicio de cualquier programa, de lo contrario no se garantiza un correcto
+ * funcionamiento.
 */
 void lcd_init_delay();
 

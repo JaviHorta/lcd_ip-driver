@@ -12,45 +12,51 @@
 
 /************************** Function Definitions ***************************/
 
-void lcd_write_data(char data)
+/* void lcd_write_data(char data)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, DATA | RW_ENABLE_MASK | data);
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, DATA | data);
     return;
-}
+} */
 
-void lcd_write_cmd(char cmd)
+/* void lcd_write_cmd(char cmd)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | cmd);
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | cmd);
     return;
-}
+} */
 
-void lcd_CursorHome_cmd(void)
+/* void lcd_CursorHome_cmd(void)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x02);
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x02);
     return;
-}
+} */
 
-void lcd_ClearDisplay_cmd(void)
+/* void lcd_ClearDisplay_cmd(void)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x01);
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x01);
     return;
-}
+} */
 
-void lcd_SetAddress(char address)
+/* void lcd_MoveCursor_cmd(char direction)
+{
+    lcd_write_cmd(0x10 | direction);
+    return;
+} */
+
+/* void lcd_SetAddress(char address)
 {
     while(LCD_IP_mReadReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG1_OFFSET) != 1);      // Espera a que este lista la LCD
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | RW_ENABLE_MASK | 0x80 | address);
     LCD_IP_mWriteReg(XPAR_LCD_IP_0_BASEADDR, LCD_IP_SLV_REG0_OFFSET, COMMAND | 0x80 | address);
     return;
-}
+} */
 
 void lcd_print_string(char* string)
 {
